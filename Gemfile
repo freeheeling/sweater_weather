@@ -41,7 +41,7 @@ group :development, :test do
   gem 'capybara'
   gem 'shoulda-matchers'
   gem 'awesome_print'
-  # gem 'webmock'
+  gem 'webmock'
   gem 'simplecov'
   gem 'launchy'
   gem 'factory_bot_rails'
