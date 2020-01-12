@@ -31,6 +31,7 @@ gem 'faraday'
 gem 'figaro'
 gem 'faker'
 gem 'jwt'
+gem 'fast_jsonapi'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -40,7 +41,7 @@ group :development, :test do
   gem 'capybara'
   gem 'shoulda-matchers'
   gem 'awesome_print'
-  gem 'webmock'
+  # gem 'webmock'
   gem 'simplecov'
   gem 'launchy'
   gem 'factory_bot_rails'
