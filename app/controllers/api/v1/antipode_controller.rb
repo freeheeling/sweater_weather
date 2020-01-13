@@ -22,7 +22,6 @@ class Api::V1::AntipodeController < ApplicationController
     end
 
     amypode_response = amypode_conn.get("antipodes?lat=#{lat}&long=#{long}")
-
     antipode_data = JSON.parse(amypode_response.body, symbolize_names: true)
 
     anti_lat = antipode_data[:data][:attributes][:lat]
