@@ -25,7 +25,21 @@ class Api::V1::AntipodeController < ApplicationController
 
     antipode_data = JSON.parse(response.body, symbolize_names: true)
 
-    
+    anti_lat = antipode_data[:data][:attributes][:lat]
+    anti_long = antipode_data[:data][:attributes][:long]
+
+    # geocode
+    conn = Faraday.new(url: 'https://maps.googleapis.com/maps/api/') do |f|
+      f.adapter(Faraday.default_adapter)
+      f.params['key'] = ENV['GEOCODE_KEY']
+      f.params['latlng'] = "#{anti_lat},#{anti_long}"
+    end
+
+    response = conn.get('geocode/json')
+    location_data = JSON.parse(response.body, symbolize_names: true)
+
+    require "pry"; binding.pry
+
     # antipode_data = AntipodeFacade.new(location)
     # render json: AntipodeSerializer.new(antipode_data)
   end
