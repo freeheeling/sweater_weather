@@ -28,7 +28,7 @@ class Api::V1::AntipodeController < ApplicationController
     anti_lat = antipode_data[:data][:attributes][:lat]
     anti_long = antipode_data[:data][:attributes][:long]
 
-    # geocode
+    # reverse geocode
     reverse_conn = Faraday.new(url: 'https://maps.googleapis.com/maps/api/') do |f|
       f.adapter(Faraday.default_adapter)
       f.params['key'] = ENV['GEOCODE_KEY']
@@ -37,6 +37,8 @@ class Api::V1::AntipodeController < ApplicationController
 
     reverse_response = reverse_conn.get('geocode/json')
     reverse_location_data = JSON.parse(reverse_response.body, symbolize_names: true)
+
+    antipode_city = reverse_location_data[:results][0][:address_components][0][:long_name]
 
     # darksky
     darksky_conn = Faraday.new(url: 'https://api.darksky.net') do |f|
@@ -49,7 +51,6 @@ class Api::V1::AntipodeController < ApplicationController
     current_temp = weather_data[:currently][:temperature]
     summary = weather_data[:daily][:data][0][:summary]
 
-    require "pry"; binding.pry
     # antipode_data = AntipodeFacade.new(location)
     # render json: AntipodeSerializer.new(antipode_data)
   end
