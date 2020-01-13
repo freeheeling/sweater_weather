@@ -5,7 +5,7 @@ describe UnsplashService do
     context '#image(location)' do
       it 'returns the image uri for a location' do
         unsplash_json_response = File.read('spec/fixtures/unsplash_image_data.json')
-        unsplash_uri = ("https://api.unsplash.com/search/photos?client_id=#{ENV['UNSPLASH_KEY']}&query=denver,co")
+        unsplash_uri = "https://api.unsplash.com/search/photos?client_id=#{ENV['UNSPLASH_KEY']}&query=denver,co"
 
         stub_request(:get, unsplash_uri).to_return(status: 200, body: unsplash_json_response)
 

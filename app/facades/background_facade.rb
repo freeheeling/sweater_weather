@@ -11,5 +11,6 @@ class BackgroundFacade
   end
 
   private
+
     attr_reader :location
 end
