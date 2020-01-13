@@ -18,15 +18,14 @@ class Api::V1::AntipodeController < ApplicationController
     # amypode
     conn = Faraday.new(url: 'http://amypode.herokuapp.com/api/v1/') do |f|
       f.adapter(Faraday.default_adapter)
-      f.headers['api_key'] = ENV['ANTIPODE_KEY']
-      f.params['lat'] = lat
-      f.params['long'] = long
+      f.headers['api_key'] = ENV['AMYPODE_KEY']
     end
 
-    response = conn.get("antipode?lat=#{lat}&long=#{long}")
+    response = conn.get("antipodes?lat=#{lat}&long=#{long}")
 
-    json = JSON.parse(response.body, symbolize_names: true)
+    antipode_data = JSON.parse(response.body, symbolize_names: true)
 
+    
     # antipode_data = AntipodeFacade.new(location)
     # render json: AntipodeSerializer.new(antipode_data)
   end
