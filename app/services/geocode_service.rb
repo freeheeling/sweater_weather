@@ -1,22 +1,13 @@
 class GeocodeService
-  def coords(location)
-    get_json_coords(location, 'geocode/json')
-  end
-
-  def address(location)
-    get_json_address(location, 'geocode/json')
+  def geocode_data(location)
+    get_json(location, 'geocode/json')
   end
 
   private
 
-    def get_json_coords(location, url)
+    def get_json(location, url)
       response = conn(location).get(url)
-      JSON.parse(response.body, symbolize_names: true)[:results][0][:geometry][:location]
-    end
-
-    def get_json_address(location, url)
-      response = conn(location).get(url)
-      JSON.parse(response.body, symbolize_names: true)[:results][0][:address_components]
+      JSON.parse(response.body, symbolize_names: true)[:results][0]
     end
 
     def conn(location)
