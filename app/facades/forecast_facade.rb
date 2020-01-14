@@ -6,16 +6,18 @@ class ForecastFacade
     @location = location
   end
 
-  def lat
-    GeocodeService.new.coords(location)[:lat]
+  def geo_data
+    @geo_data ||= GeocodeService.new.geocode_data(location)
   end
 
-  def long
-    GeocodeService.new.coords(location)[:lng]
+  def dark_data
+    lat = geo_data[:geometry][:location][:lat]
+    long = geo_data[:geometry][:location][:lng]
+    @dark_data ||= DarkskyService.new.darksky_data(lat, long)
   end
 
   def search_location
-    data = GeocodeService.new.address(location)
+    data = geo_data[:address_components]
     {
       city: data[0][:long_name],
       state: data[2][:short_name],
@@ -24,7 +26,7 @@ class ForecastFacade
   end
 
   def current_forecast
-    data = DarkskyService.new.current(lat, long)
+    data = dark_data[:currently]
     {
       current_date: Time.at(data[:time]).strftime('%I:%M %p %-m/%d'),
       current_temp: (data[:temperature]).round,
@@ -37,7 +39,7 @@ class ForecastFacade
   end
 
   def daily_forecast
-    data = DarkskyService.new.daily(lat, long)
+    data = dark_data[:daily][:data][0]
     {
       summary_today: data[:summary],
       daily_day: Time.at(data[:time]).strftime('%A'),
@@ -50,7 +52,7 @@ class ForecastFacade
   end
 
   def hourly_forecast
-    data = DarkskyService.new.hourly(lat, long)
+    data = dark_data[:hourly][:data][0]
     {
       hourly_icon: data[:icon],
       hourly_time: Time.at(data[:time]).strftime('%-I %p'),
