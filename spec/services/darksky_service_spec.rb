@@ -3,7 +3,7 @@ require 'rails_helper'
 describe DarkskyService do
   context 'instance methods' do
     context '#current(lat, long)' do
-      it 'returns current forecast data', :vcr do
+      it 'returns current forecast data' do
         search = subject.current('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash
@@ -18,7 +18,7 @@ describe DarkskyService do
     end
 
     context '#daily(lat, long)' do
-      it 'returns daily forecast data', :vcr do
+      it 'returns daily forecast data' do
         search = subject.daily('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash
@@ -33,7 +33,7 @@ describe DarkskyService do
     end
 
     context '#hourly(lat, long)' do
-      it 'returns hourly forecast data', :vcr do
+      it 'returns hourly forecast data' do
         search = subject.hourly('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash

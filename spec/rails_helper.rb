@@ -8,8 +8,8 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 
 require 'rspec/rails'
-require 'webmock/rspec'
-require 'vcr'
+# require 'webmock/rspec'
+# require 'vcr'
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
@@ -77,12 +77,12 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-VCR.configure do |config|
-  config.ignore_localhost = true
-  config.cassette_library_dir = 'spec/cassettes'
-  config.hook_into :webmock
-  config.configure_rspec_metadata!
-  config.filter_sensitive_data("<GEOCODE_KEY>") { ENV['GEOCODE_KEY'] }
-  config.filter_sensitive_data("<DARKSKY_KEY>") { ENV['DARKSKY_KEY'] }
-  config.filter_sensitive_data("<UNSPLASH_KEY>") { ENV['UNSPLASH_KEY'] }
-end
+# VCR.configure do |config|
+#   config.ignore_localhost = true
+#   config.cassette_library_dir = 'spec/cassettes'
+#   config.hook_into :webmock
+#   config.configure_rspec_metadata!
+#   config.filter_sensitive_data("<GEOCODE_KEY>") { ENV['GEOCODE_KEY'] }
+#   config.filter_sensitive_data("<DARKSKY_KEY>") { ENV['DARKSKY_KEY'] }
+#   config.filter_sensitive_data("<UNSPLASH_KEY>") { ENV['UNSPLASH_KEY'] }
+# end

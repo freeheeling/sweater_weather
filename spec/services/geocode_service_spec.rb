@@ -3,7 +3,8 @@ require 'rails_helper'
 describe GeocodeService do
   context 'instance methods' do
     context '#coords(location)' do
-      it 'returns location latitude and longitude coordinates', :vcr do
+      it 'returns location latitude and longitude coordinates' do
+
         search = subject.coords('denver colorado')
 
         expect(search).to be_a Hash
@@ -13,7 +14,8 @@ describe GeocodeService do
     end
 
     context '#address(location)' do
-      it 'returns city, state and country name', :vcr do
+      it 'returns city, state and country name' do
+
         search = subject.address('denver colorado')
 
         expect(search).to be_an Array
