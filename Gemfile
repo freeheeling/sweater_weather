@@ -45,6 +45,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'launchy'
   gem 'factory_bot_rails'
+  gem 'vcr'
 end
 
 group :development do
