@@ -21,10 +21,11 @@ class Api::V1::GifsController < ApplicationController
 
     dark_response = dark_conn.get("/forecast/#{ENV['DARKSKY_KEY']}/#{lat},#{long}")
     parse_json = JSON.parse(dark_response.body, symbolize_names: true)
-    daily_weather_data = parse_json[:daily][:data][0]
+    daily_weather_data = parse_json[:daily][:data]
 
-    time = daily_weather_data[:time]
-    summary = daily_weather_data[:summary]
+    # need time and summary for each day
+    times = daily_weather_data.map { |day| day[:time] }
+    summaries = daily_weather_data.map { |day| day[:summary] }
 
     gif_conn = Faraday.new(url: 'https://api.giphy.com/v1/') do |f|
       f.adapter(Faraday.default_adapter)
