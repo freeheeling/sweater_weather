@@ -26,11 +26,11 @@ class ForecastFacade
   def current_forecast
     data = DarkskyService.new.current(lat, long)
     {
-      current_date: data[:time],
-      current_temp: data[:temperature],
-      feels_like: data[:apparentTemperature],
+      current_date: Time.at(data[:time]).strftime('%I:%M %p %-m/%d'),
+      current_temp: (data[:temperature]).round,
+      feels_like: (data[:apparentTemperature]).round,
       current_icon: data[:icon],
-      humidity: data[:humidity],
+      humidity: (data[:humidity]*100).to_i,
       visibility: data[:visibility],
       uv_index: data[:uvIndex]
     }
@@ -40,11 +40,11 @@ class ForecastFacade
     data = DarkskyService.new.daily(lat, long)
     {
       summary_today: data[:summary],
-      daily_day: data[:time],
-      daily_high: data[:temperatureHigh],
-      daily_low: data[:temperatureLow],
+      daily_day: Time.at(data[:time]).strftime('%A'),
+      daily_high: (data[:temperatureHigh]).round,
+      daily_low: (data[:temperatureLow]).round,
       daily_icon: data[:icon],
-      daily_precip_percent: data[:precipProbability],
+      daily_precip_percent: (data[:precipProbability]*100).to_i,
       daily_precip_type: data[:precipType]
     }
   end
@@ -53,8 +53,8 @@ class ForecastFacade
     data = DarkskyService.new.hourly(lat, long)
     {
       hourly_icon: data[:icon],
-      hourly_time: data[:time],
-      hourly_temp: data[:temperature]
+      hourly_time: Time.at(data[:time]).strftime('%-I %p'),
+      hourly_temp: (data[:temperature]).round
     }
   end
 
