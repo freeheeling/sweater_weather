@@ -3,12 +3,7 @@ require 'rails_helper'
 describe DarkskyService do
   context 'instance methods' do
     context '#current(lat, long)' do
-      it 'returns current forecast data' do
-        darksky_json_response = File.read('spec/fixtures/darksky_forecast_data.json')
-        darksky_uri = "https://api.darksky.net/forecast/#{ENV['DARKSKY_KEY']}/39.7392358,-104.990251"
-
-        stub_request(:get, darksky_uri).to_return(status: 200, body: darksky_json_response)
-
+      it 'returns current forecast data', :vcr do
         search = subject.current('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash
@@ -22,17 +17,13 @@ describe DarkskyService do
       end
     end
 
-    context '#hourly(lat, long)' do
-      it 'returns hourly forecast data' do
-        darksky_json_response = File.read('spec/fixtures/darksky_forecast_data.json')
-        darksky_uri = "https://api.darksky.net/forecast/#{ENV['DARKSKY_KEY']}/39.7392358,-104.990251"
-
-        stub_request(:get, darksky_uri).to_return(status: 200, body: darksky_json_response)
-
+    context '#daily(lat, long)' do
+      it 'returns daily forecast data', :vcr do
         search = subject.daily('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash
         expect(search).to have_key(:summary)
+        expect(search).to have_key(:time)
         expect(search).to have_key(:temperatureHigh)
         expect(search).to have_key(:temperatureLow)
         expect(search).to have_key(:icon)
@@ -42,17 +33,12 @@ describe DarkskyService do
     end
 
     context '#hourly(lat, long)' do
-      it 'returns hourly forecast data' do
-        darksky_json_response = File.read('spec/fixtures/darksky_forecast_data.json')
-        darksky_uri = "https://api.darksky.net/forecast/#{ENV['DARKSKY_KEY']}/39.7392358,-104.990251"
-
-        stub_request(:get, darksky_uri).to_return(status: 200, body: darksky_json_response)
-
+      it 'returns hourly forecast data', :vcr do
         search = subject.hourly('39.7392358', '-104.990251')
 
         expect(search).to be_a Hash
-        expect(search).to have_key(:summary)
         expect(search).to have_key(:icon)
+        expect(search).to have_key(:time)
         expect(search).to have_key(:temperature)
       end
     end
