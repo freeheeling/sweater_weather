@@ -10,10 +10,30 @@ class Api::V1::GifsController < ApplicationController
 
     geo_response = geo_conn.get('geocode/json')
     parsed_json = JSON.parse(geo_response.body, symbolize_names: true)
-    location_info = parsed_json[:results][0]
+    location_data = parsed_json[:results][0]
 
-    lat = location_info[:geometry][:location][:lat]
-    long = location_info[:geometry][:location][:lng]
+    lat = location_data[:geometry][:location][:lat]
+    long = location_data[:geometry][:location][:lng]
+
+    dark_conn = Faraday.new(url: 'https://api.darksky.net') do |f|
+      f.adapter(Faraday.default_adapter)
+    end
+
+    dark_response = dark_conn.get("/forecast/#{ENV['DARKSKY_KEY']}/#{lat},#{long}")
+    parse_json = JSON.parse(dark_response.body, symbolize_names: true)
+    daily_weather_data = parse_json[:daily][:data][0]
+
+    day_data = { time: daily_weather_data[:time], summary: daily_weather_data[:summary] }
+
+    gif_conn = Faraday.new(url: 'api.giphy.com/v1/') do |f|
+      f.adapter(Faraday.default_adapter)
+      f.params['key'] = ENV['GIPHY_KEY']
+      f.params['q'] = day_data[:summary]
+    end
+
+    gif_response = gif_conn.get('gifs/search')
+    parsed_json = JSON.parse(gif_response.body, symbolize_names: true)
+    
 
 
   end
