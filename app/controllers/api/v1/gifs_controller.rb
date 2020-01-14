@@ -28,7 +28,7 @@ class Api::V1::GifsController < ApplicationController
 
     gif_conn = Faraday.new(url: 'https://api.giphy.com/v1/') do |f|
       f.adapter(Faraday.default_adapter)
-      f.params['key'] = ENV['GIPHY_KEY']
+      f.params['api_key'] = ENV['GIPHY_KEY']
       f.params['q'] = summary
     end
 
@@ -39,5 +39,6 @@ class Api::V1::GifsController < ApplicationController
     url = gif_data[:images][:downsized_large][:url]
 
     giphy_forecast = Giphcast.new(time, summary, url)
+    render json: GiphySerializer.new(giphy_forecast)
   end
 end
