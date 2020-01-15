@@ -1,5 +1,5 @@
 class BackgroundSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :id, :image_uri
+  attributes :image_uri
 end
