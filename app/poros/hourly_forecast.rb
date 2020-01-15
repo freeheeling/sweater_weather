@@ -10,6 +10,6 @@ class HourlyForecast
         hourly_time: Time.at(hour[:time]).strftime('%-I %p'),
         hourly_temp: (hour[:temperature]).round
       }
-    end.take(8)
+    end[0..7]
   end
 end
