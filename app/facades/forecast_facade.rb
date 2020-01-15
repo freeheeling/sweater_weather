@@ -51,14 +51,27 @@ class ForecastFacade
     }
   end
 
+          # dark_data[:daily][:data].map do |day|
+          #   day[:summary] = day[:summary]
+          # end
+          # # => ["Clear throughout the day.",...]
+          #
+          # dark_data[:daily][:data].map do |day|
+          #   day[:temperatureHight] = (day[:temperatureHigh]).round
+          # end
+          # # => [46, 56, 51, 49, 48, 37, 49, 47]
+          #
+          # dark_data[:daily][:data].map do |day|
+          #   day[:time] = Time.at(day[:time]).strftime('%A')
+          # end
+          # # =>
+
+
   def hourly_forecast
-    data = dark_data[:hourly][:data][0]
-    {
-      hourly_icon: data[:icon],
-      hourly_time: Time.at(data[:time]).strftime('%-I %p'),
-      hourly_temp: (data[:temperature]).round
-    }
+    hourly_data = dark_data[:hourly][:data]
+    HourlyForecast.new(hourly_data).next_eight_hours
   end
+
 
   private
 
