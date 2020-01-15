@@ -21,28 +21,26 @@ class Api::V1::GifsController < ApplicationController
 
     dark_response = dark_conn.get("/forecast/#{ENV['DARKSKY_KEY']}/#{lat},#{long}")
     parse_json = JSON.parse(dark_response.body, symbolize_names: true)
-    daily_weather_data = parse_json[:daily][:data][0]
+    daily_weather_data = parse_json[:daily][:data]
 
-    time = daily_weather_data[:time]
-    summary = daily_weather_data[:summary]
+    giphy_forecast = daily_weather_data.map do |day|
+      gif_conn = Faraday.new(url: 'https://api.giphy.com/v1/') do |f|
+        f.adapter(Faraday.default_adapter)
+        f.params['api_key'] = ENV['GIPHY_KEY']
+        f.params['q'] = day[:summary]
+      end
 
-    # need time and summary for each day
-    # times = daily_weather_data.map { |day| day[:time] }
-    # summaries = daily_weather_data.map { |day| day[:summary] }
+      gif_response = gif_conn.get('gifs/search')
+      parsed_json = JSON.parse(gif_response.body, symbolize_names: true)
+      gif_data = parsed_json[:data][0]
 
-    gif_conn = Faraday.new(url: 'https://api.giphy.com/v1/') do |f|
-      f.adapter(Faraday.default_adapter)
-      f.params['api_key'] = ENV['GIPHY_KEY']
-      f.params['q'] = summary
+      url = gif_data[:images][:downsized_large][:url]
+
+      Giphcast.new(day[:time], day[:summary], url)
     end
 
-    gif_response = gif_conn.get('gifs/search')
-    parsed_json = JSON.parse(gif_response.body, symbolize_names: true)
-    gif_data = parsed_json[:data][0]
+    images = Images.new(giphy_forecast)
 
-    url = gif_data[:images][:downsized_large][:url]
-
-    giphy_forecast = Giphcast.new(time, summary, url)
-    render json: GiphySerializer.new(giphy_forecast)
+    render json: GiphySerializer.new(images)
   end
 end
