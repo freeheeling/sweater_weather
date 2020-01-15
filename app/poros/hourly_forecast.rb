@@ -6,9 +6,9 @@ class HourlyForecast
   def next_eight_hours
     @hourly_data.map do |hour|
       {
-        hourly_icon: hour[:icon],
-        hourly_time: Time.at(hour[:time]).strftime('%-I %p'),
-        hourly_temp: (hour[:temperature]).round
+        time_hour: Time.at(hour[:time]).strftime('%-I %p'),
+        icon_description: hour[:icon],
+        temp_F: (hour[:temperature]).round
       }
     end[0..7]
   end
