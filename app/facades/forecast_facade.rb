@@ -17,15 +17,13 @@ class ForecastFacade
   end
 
   def search_location
-    location_data = [geo_data[:address_components]]
+    location_data = geo_data[:address_components]
     SearchLocation.new(location_data).city_state_country
   end
 
   def current_weather
-    current_data = [dark_data[:currently]]
-    CurrentWeather.new(current_data).currently
+    CurrentWeather.new(dark_data).currently
   end
-
 
   def daily_forecast
     daily_data = dark_data[:daily][:data]
