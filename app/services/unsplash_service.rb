@@ -1,5 +1,5 @@
 class UnsplashService
-  def image(location)
+  def image_data(location)
     get_json(location, 'search/photos')
   end
 
@@ -7,7 +7,7 @@ class UnsplashService
 
     def get_json(location, url)
       response = conn(location).get(url)
-      JSON.parse(response.body, symbolize_names: true)[:results][0][:urls][:raw]
+      JSON.parse(response.body, symbolize_names: true)[:results]
     end
 
     def conn(location)
