@@ -6,8 +6,12 @@ class BackgroundFacade
     @location = location
   end
 
+  def image_data
+    @image_data ||= UnsplashService.new.image_data(location)
+  end
+
   def image_uri
-    UnsplashService.new.image(location)
+    image_data[0][:urls][:raw]
   end
 
   private

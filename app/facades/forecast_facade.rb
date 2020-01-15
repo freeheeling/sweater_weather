@@ -17,47 +17,24 @@ class ForecastFacade
   end
 
   def search_location
-    data = geo_data[:address_components]
-    {
-      city: data[0][:long_name],
-      state: data[2][:short_name],
-      country: data[3][:long_name]
-    }
+    location_data = [geo_data[:address_components]]
+    SearchLocation.new(location_data).city_state_country
   end
 
-  def current_forecast
-    data = dark_data[:currently]
-    {
-      current_date: Time.at(data[:time]).strftime('%I:%M %p %-m/%d'),
-      current_temp: (data[:temperature]).round,
-      feels_like: (data[:apparentTemperature]).round,
-      current_icon: data[:icon],
-      humidity: (data[:humidity]*100).to_i,
-      visibility: data[:visibility],
-      uv_index: data[:uvIndex]
-    }
+  def current_weather
+    current_data = [dark_data[:currently]]
+    CurrentWeather.new(current_data).currently
   end
+
 
   def daily_forecast
-    data = dark_data[:daily][:data][0]
-    {
-      summary_today: data[:summary],
-      daily_day: Time.at(data[:time]).strftime('%A'),
-      daily_high: (data[:temperatureHigh]).round,
-      daily_low: (data[:temperatureLow]).round,
-      daily_icon: data[:icon],
-      daily_precip_percent: (data[:precipProbability]*100).to_i,
-      daily_precip_type: data[:precipType]
-    }
+    daily_data = dark_data[:daily][:data]
+    DailyForecast.new(daily_data).next_five_days
   end
 
   def hourly_forecast
-    data = dark_data[:hourly][:data][0]
-    {
-      hourly_icon: data[:icon],
-      hourly_time: Time.at(data[:time]).strftime('%-I %p'),
-      hourly_temp: (data[:temperature]).round
-    }
+    hourly_data = dark_data[:hourly][:data]
+    HourlyForecast.new(hourly_data).next_eight_hours
   end
 
   private

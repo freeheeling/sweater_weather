@@ -2,44 +2,34 @@ require 'rails_helper'
 
 describe DarkskyService do
   context 'instance methods' do
-    context '#current(lat, long)' do
-      it 'returns current forecast data', :vcr do
-        search = subject.current('39.7392358', '-104.990251')
+    context '#darksky_data(lat, long)', :vcr do
+      it 'returns forecast data for specific coordinates' do
+      search = subject.darksky_data('39.7392358', '-104.990251')
 
-        expect(search).to be_a Hash
-        expect(search).to have_key(:time)
-        expect(search).to have_key(:temperature)
-        expect(search).to have_key(:apparentTemperature)
-        expect(search).to have_key(:icon)
-        expect(search).to have_key(:humidity)
-        expect(search).to have_key(:visibility)
-        expect(search).to have_key(:uvIndex)
-      end
-    end
+      expect(search).to be_a Hash
+      
+      expect(search[:currently]).to have_key(:time)
+      expect(search[:currently]).to have_key(:temperature)
+      expect(search[:currently]).to have_key(:apparentTemperature)
+      expect(search[:currently]).to have_key(:icon)
+      expect(search[:currently]).to have_key(:humidity)
+      expect(search[:currently]).to have_key(:visibility)
+      expect(search[:currently]).to have_key(:uvIndex)
 
-    context '#daily(lat, long)' do
-      it 'returns daily forecast data', :vcr do
-        search = subject.daily('39.7392358', '-104.990251')
+      expect(search[:daily]).to have_key(:summary)
 
-        expect(search).to be_a Hash
-        expect(search).to have_key(:summary)
-        expect(search).to have_key(:time)
-        expect(search).to have_key(:temperatureHigh)
-        expect(search).to have_key(:temperatureLow)
-        expect(search).to have_key(:icon)
-        expect(search).to have_key(:precipProbability)
-        expect(search).to have_key(:precipType)
-      end
-    end
+      expect(search[:daily][:data]).to be_an Array
+      expect(search[:daily][:data][0]).to have_key(:time)
+      expect(search[:daily][:data][0]).to have_key(:temperatureHigh)
+      expect(search[:daily][:data][0]).to have_key(:temperatureLow)
+      expect(search[:daily][:data][0]).to have_key(:icon)
+      expect(search[:daily][:data][0]).to have_key(:precipProbability)
+      expect(search[:daily][:data][0]).to have_key(:precipType)
 
-    context '#hourly(lat, long)' do
-      it 'returns hourly forecast data', :vcr do
-        search = subject.hourly('39.7392358', '-104.990251')
-
-        expect(search).to be_a Hash
-        expect(search).to have_key(:icon)
-        expect(search).to have_key(:time)
-        expect(search).to have_key(:temperature)
+      expect(search[:hourly][:data]).to be_an Array
+      expect(search[:hourly][:data][0]).to have_key(:icon)
+      expect(search[:hourly][:data][0]).to have_key(:time)
+      expect(search[:hourly][:data][0]).to have_key(:temperature)
       end
     end
   end
